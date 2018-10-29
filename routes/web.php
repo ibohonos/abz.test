@@ -11,10 +11,8 @@
 |
 */
 
-//Route::get('/', function () {
-//    return view('welcome');
-//});
-
 Auth::routes();
 
 Route::get('/', 'HomeController@index')->name('home');
+Route::get('/create', 'HomeController@createWorker')->name('create.worker');
+Route::post('/create', 'HomeController@saveWorker')->name('save.worker');

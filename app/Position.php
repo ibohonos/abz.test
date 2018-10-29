@@ -9,4 +9,9 @@ class Position extends Model
 	protected $fillable = [
 		'title'
 	];
+
+	public function workers()
+	{
+		return $this->hasMany(Worker::class);
+	}
 }
