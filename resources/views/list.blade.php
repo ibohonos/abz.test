@@ -2,6 +2,5 @@
 
 @section('content')
 	<workers></workers>
-	{{-- <workers :workers="{{ $workers }}"></workers> --}}
 @endsection
 

@@ -59,7 +59,7 @@
 											<input type="hidden" name="_token" :value="csrf_token">
 											<input type="hidden" name="worker_id" :value="worker.id">
 										</form>
-										<a :href="'edit' + worker.id" class="d-inline-flex p-2 align-self-center float-right card-link">Edit</a>
+										<a :href="'/edit/' + worker.id" class="d-inline-flex p-2 align-self-center float-right card-link">Edit</a>
 									</div>
 									<div v-else class="list-group-item list-group-item-action">
 										<h4 class="text-center">No results</h4>

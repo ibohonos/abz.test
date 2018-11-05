@@ -47867,7 +47867,7 @@ var render = function() {
                               {
                                 staticClass:
                                   "d-inline-flex p-2 align-self-center float-right card-link",
-                                attrs: { href: "edit" + worker.id }
+                                attrs: { href: "/edit/" + worker.id }
                               },
                               [_vm._v("Edit")]
                             )

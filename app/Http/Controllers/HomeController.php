@@ -69,10 +69,10 @@ class HomeController extends Controller
 			$accessed = '';
 		}
 
-		$this->output[] = '<div class="list-group-item list-group-item-action d-flex align-items-start level-' . $this->level . '">
-								<a href="' . route('show.worker', $node->id) . '" class="card-link d-flex align-self-center float-left p-2">
-									<img class=" align-self-center p-2" src="' . $node->avatar . '" style="width: 10%;">
-									<div class="d-inline-block">
+		$this->output[] = '<div class="list-group-item list-group-item-action level-' . $this->level . '">
+								<a href="' . route('show.worker', $node->id) . '" class="card-link">
+									<img class="d-inline-flex pl-2 align-self-center" src="' . $node->avatar . '" style="width: 10%;">
+									<div class="d-inline-flex pl-2 align-self-center flex-column">
 										<h4 class="pb-2">' . $node->name . '</h4>
 										<h6>' . $node->salary . '</h6>
 										<h6>' . $node->position->title . '</h6>

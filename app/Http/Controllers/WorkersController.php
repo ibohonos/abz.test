@@ -96,6 +96,13 @@ class WorkersController extends Controller
 
 		$worker = Worker::find($request->worker_id);
 
+		if ($worker->worker_id !== $request->boss) {
+			foreach ($worker->subjects as $value) {
+				$value->worker_id = $worker->boss->id;
+				$value->save();
+			}
+		}
+
 		if ($request->hasFile('avatar'))
 		{
 			$img = $request->file('avatar');
