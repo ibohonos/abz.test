@@ -17,11 +17,11 @@ class Worker extends Model
 
 	public function boss()
 	{
-		return $this->belongsTo(Worker::class);
+		return $this->belongsTo(Worker::class, 'worker_id');
 	}
 
 	public function subjects()
 	{
-		return $this->hasMany(Worker::class);
+		return $this->hasMany(Worker::class, 'worker_id');
 	}
 }

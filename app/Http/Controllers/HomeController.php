@@ -4,12 +4,17 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Worker;
-use App\Position;
-use Validator;
+use App\Services\Tree;
+use Auth;
 
 class HomeController extends Controller
 {
 
+
+
+	private $tree;
+	private $output;
+	private $level = 0;
 	private $data = [];
 
 	/**
@@ -29,35 +34,63 @@ class HomeController extends Controller
 	 */
 	public function index()
 	{
-		return view('home');
+		$builder = new Worker;
+		$arr = [];
+
+		// if ()
+		$this->tree = (new Tree($builder))->get();
+		if ($this->tree->nodesByParent) {
+			$nodesByParent = $this->tree->nodesByParent[0];
+
+			foreach ($nodesByParent as $value) {
+				$arr = $this->treeRecursion($value->id);
+			}
+		}
+
+		$this->data['arr'] = $arr;
+
+		return view('home', $this->data);
 	}
 
-	public function createWorker()
+	private function treeRecursion($id)
 	{
-		$this->data['positions'] = Position::all();
-		$this->data['workers'] = Worker::all();
+		$node = $this->tree->getNode($id);
+		$subnodes = $this->tree->getSubnodes($id);
 
-		return view('create', $this->data);
+		if (Auth::id()) {
+			$accessed = '<a href="' . route('delete.worker') . '" class="d-inline-flex p-2 align-self-center float-right card-link text-danger" onclick="event.preventDefault();
+											 document.getElementById(\'delete-form-' . $node->id . '\').submit();">Delete</a>
+						<form id="delete-form-' . $node->id . '" action="' . route('delete.worker') . '" method="POST" style="display: none;">
+							<input type="hidden" name="_token" value="' . csrf_token() . '">
+							<input type="hidden" name="worker_id" value="' . $node->id . '">
+						</form>
+						<a href="' . route('edit.worker', $node->id) . '" class="d-inline-flex p-2 align-self-center float-right card-link">Edit</a>';
+		} else {
+			$accessed = '';
+		}
+
+		$this->output[] = '<div class="list-group-item list-group-item-action d-flex align-items-start level-' . $this->level . '">
+								<a href="' . route('show.worker', $node->id) . '" class="card-link d-flex align-self-center float-left p-2">
+									<img class=" align-self-center p-2" src="' . $node->avatar . '" style="width: 10%;">
+									<div class="d-inline-block">
+										<h4 class="pb-2">' . $node->name . '</h4>
+										<h6>' . $node->salary . '</h6>
+										<h6>' . $node->position->title . '</h6>
+									</div>
+								</a>' . $accessed . '
+							</div>';
+
+		if ($subnodes) {
+			$this->level++;
+
+			foreach ($subnodes as $subnode) {
+				$this->treeRecursion($subnode->id);
+			}
+
+			$this->level--;
+		}
+
+		return $this->output;
 	}
 
-	public function saveWorker(Request $request)
-	{
-		$request->validate([
-			'full_name' => 'required|string|max:255',
-			'salary' => 'required|string',
-			'position' => 'required|numeric'
-		]);
-
-		$worker = new Worker;
-
-		$worker->name = $request->full_name;
-		$worker->salary = $request->salary;
-		$worker->position_id = $request->position;
-		$worker->worker_id = $request->boss;
-		$worker->accepted_at = $request->accepted_at;
-
-		$worker->save();
-
-		return redirect()->back()->with(['status' => 'Worker saved!']);
-	}
 }

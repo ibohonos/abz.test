@@ -5,7 +5,7 @@
 		<div class="row justify-content-center">
 			<div class="col-md-12">
 				<div class="card">
-					<div class="card-header">Create worker</div>
+					<div class="card-header">Update worker</div>
 
 					<div class="card-body">
 						@if (session('status'))
@@ -24,30 +24,31 @@
 							</div>
 						@endif
 
-						<form method="post" action="{{ route('save.worker') }}" enctype="multipart/form-data">
+						<form method="post" action="{{ route('update.worker') }}" enctype="multipart/form-data">
 							@csrf
 
 							<div class="form-group">
 								<label for="full_name">Full name</label>
-								<input type="text" class="form-control" id="full_name" name="full_name" placeholder="Enter full name" required>
+								<input type="text" class="form-control" id="full_name" name="full_name" value="{{ $worker->name }}" placeholder="Enter full name" required>
 							</div>
 
 							<div class="form-group">
 								<label for="avatar">Avatar</label>
+								<img src="{{ $worker->avatar }}" class="img-thumbnail rounded mx-auto d-block w-25">
 								<input type="file" class="form-control-file" id="avatar" name="avatar" accept="image/*">
 							</div>
 
 							<div class="form-group">
 								<label for="salary">Salary</label>
-								<input type="text" class="form-control" id="salary" name="salary" placeholder="Salary" required>
+								<input type="text" class="form-control" id="salary" name="salary" placeholder="Salary" value="{{ $worker->salary }}" required>
 							</div>
 
 							<div class="form-group">
 								<label for="position">Position</label>
 								<select name="position" id="position" class="custom-select" required>
-									<option selected disabled>Choose position</option>
+									<option disabled>Choose position</option>
 									@foreach($positions as $position)
-										<option value="{{ $position->id }}">{{ $position->title }}</option>
+										<option value="{{ $position->id }}" @if($position->id === $worker->position->id) selected @endif>{{ $position->title }}</option>
 									@endforeach
 								</select>
 							</div>
@@ -55,19 +56,20 @@
 							<div class="form-group">
 								<label for="boss">Boss</label>
 								<select name="boss" id="boss" class="custom-select">
-									<option value="0" selected>Choose Boss</option>
-									@foreach($workers as $worker)
-										<option value="{{ $worker->id }}">{{ $worker->name }}</option>
+									<option value="0">Choose Boss</option>
+									@foreach($workers as $value)
+										<option value="{{ $value->id }}" @if($worker->boss && $value->id === $worker->boss->id) selected @endif>{{ $value->name }}</option>
 									@endforeach
 								</select>
 							</div>
 
 							<div class="form-group" data-provide="datepicker">
 								<label for="accepted_at">Accepted</label>
-								<input type="date" class="form-control" name="accepted_at" id="accepted_at">
+								<input type="date" class="form-control" name="accepted_at" id="accepted_at" value="{{ \Carbon\Carbon::parse($worker->accepted_at)->format('Y-m-d') }}">
 							</div>
 
-							<button type="submit" class="btn btn-primary">Create</button>
+							<input type="hidden" name="worker_id" value="{{ $worker->id }}">
+							<button type="submit" class="btn btn-primary">Update</button>
 						</form>
 
 					</div>
