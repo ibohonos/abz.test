@@ -14056,6 +14056,7 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
  */
 
 var token = document.head.querySelector('meta[name="csrf-token"]');
+window.token = token.content;
 
 if (token) {
   window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
@@ -47504,21 +47505,89 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-	props: {
-		// workers: {
-		// 	type: Object,
-		// 	required: true
-		// }
-	},
 	data: function data() {
-		return {};
+		return {
+			workers: {},
+			csrf_token: window.token,
+			query_term: "",
+			search_as: "name",
+			sort_by: "name",
+			order_by: "asc"
+		};
 	},
 
-	methods: {},
+	watch: {
+		query_term: function query_term() {
+			this.debouncedGetAllWorkers();
+		},
+		search_as: function search_as() {
+			this.debouncedGetAllWorkers();
+		},
+		sort_by: function sort_by() {
+			this.debouncedGetAllWorkers();
+		},
+		order_by: function order_by() {
+			this.debouncedGetAllWorkers();
+		}
+	},
+	created: function created() {
+		this.debouncedGetAllWorkers = _.debounce(this.getList, 500);
+	},
+
+	methods: {
+		getList: function getList() {
+			var _this = this;
+
+			axios.get('/api/list-workers', {
+				params: {
+					query_term: this.query_term,
+					search_as: this.search_as,
+					sort_by: this.sort_by,
+					order_by: this.order_by
+				}
+			}).then(function (resp) {
+				_this.workers = resp.data.data.workers;
+			});
+		}
+	},
 	mounted: function mounted() {
-		// console.log(this.workers);
+		this.getList();
 	}
 });
 
@@ -47530,42 +47599,303 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "container" }, [
-      _c("div", { staticClass: "row justify-content-center" }, [
-        _c("div", { staticClass: "col-md-12" }, [
-          _c("div", { staticClass: "card card-default" }, [
-            _c("div", { staticClass: "card-header" }, [_vm._v("Workers list")]),
-            _vm._v(" "),
-            _c("div", { staticClass: "card-body" }, [
-              _c("div", { staticClass: "row" }, [
-                _c("div", { staticClass: "col-md-12" }, [
-                  _c("div", { staticClass: "list-group" }, [
-                    _c(
-                      "div",
-                      { staticClass: "list-group-item list-group-item-action" },
-                      [
-                        _c("h4", { staticClass: "text-center" }, [
-                          _vm._v("No results")
-                        ])
-                      ]
-                    )
-                  ])
+  return _c("div", { staticClass: "container" }, [
+    _c("div", { staticClass: "row justify-content-center" }, [
+      _c("div", { staticClass: "col-md-12" }, [
+        _c("div", { staticClass: "card card-default" }, [
+          _c("div", { staticClass: "card-header" }, [_vm._v("Workers list")]),
+          _vm._v(" "),
+          _c("div", { staticClass: "card-body" }, [
+            _c("div", { staticClass: "row" }, [
+              _c("div", { staticClass: "col-md-8" }, [
+                _c("div", { staticClass: "form-group" }, [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.query_term,
+                        expression: "query_term"
+                      }
+                    ],
+                    staticClass: "form-control form-control-lg",
+                    attrs: {
+                      type: "text",
+                      placeholder: "Please enter search query"
+                    },
+                    domProps: { value: _vm.query_term },
+                    on: {
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.query_term = $event.target.value
+                      }
+                    }
+                  })
                 ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-md-4" }, [
+                _c("div", { staticClass: "form-group col" }, [
+                  _c(
+                    "select",
+                    {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.search_as,
+                          expression: "search_as"
+                        }
+                      ],
+                      staticClass: "form-control form-control-lg",
+                      on: {
+                        change: function($event) {
+                          var $$selectedVal = Array.prototype.filter
+                            .call($event.target.options, function(o) {
+                              return o.selected
+                            })
+                            .map(function(o) {
+                              var val = "_value" in o ? o._value : o.value
+                              return val
+                            })
+                          _vm.search_as = $event.target.multiple
+                            ? $$selectedVal
+                            : $$selectedVal[0]
+                        }
+                      }
+                    },
+                    [
+                      _c("option", { attrs: { value: "name" } }, [
+                        _vm._v("Name")
+                      ]),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "salary" } }, [
+                        _vm._v("Salary")
+                      ]),
+                      _vm._v(" "),
+                      _c("option", { attrs: { value: "accepted_at" } }, [
+                        _vm._v("Accepted")
+                      ])
+                    ]
+                  )
+                ])
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "row" }, [
+              _c("div", { staticClass: "form-group col-md-8" }, [
+                _c("label", { attrs: { for: "sortBy" } }, [_vm._v("Sort By")]),
+                _vm._v(" "),
+                _c(
+                  "select",
+                  {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.sort_by,
+                        expression: "sort_by"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: { id: "sortBy" },
+                    on: {
+                      change: function($event) {
+                        var $$selectedVal = Array.prototype.filter
+                          .call($event.target.options, function(o) {
+                            return o.selected
+                          })
+                          .map(function(o) {
+                            var val = "_value" in o ? o._value : o.value
+                            return val
+                          })
+                        _vm.sort_by = $event.target.multiple
+                          ? $$selectedVal
+                          : $$selectedVal[0]
+                      }
+                    }
+                  },
+                  [
+                    _c("option", { attrs: { value: "name" } }, [
+                      _vm._v("Name")
+                    ]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "salary" } }, [
+                      _vm._v("Salary")
+                    ]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "accepted_at" } }, [
+                      _vm._v("Accepted")
+                    ])
+                  ]
+                )
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "form-group col-md-4" }, [
+                _c("label", { attrs: { for: "orderBy" } }, [
+                  _vm._v("Order By")
+                ]),
+                _vm._v(" "),
+                _c(
+                  "select",
+                  {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.order_by,
+                        expression: "order_by"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: { id: "orderBy" },
+                    on: {
+                      change: function($event) {
+                        var $$selectedVal = Array.prototype.filter
+                          .call($event.target.options, function(o) {
+                            return o.selected
+                          })
+                          .map(function(o) {
+                            var val = "_value" in o ? o._value : o.value
+                            return val
+                          })
+                        _vm.order_by = $event.target.multiple
+                          ? $$selectedVal
+                          : $$selectedVal[0]
+                      }
+                    }
+                  },
+                  [
+                    _c("option", { attrs: { value: "asc" } }, [_vm._v("Asc")]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "desc" } }, [_vm._v("Desc")])
+                  ]
+                )
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "row" }, [
+              _c("div", { staticClass: "col-md-12" }, [
+                _c(
+                  "div",
+                  { staticClass: "list-group" },
+                  _vm._l(_vm.workers, function(worker) {
+                    return _vm.workers.length > 0
+                      ? _c(
+                          "div",
+                          {
+                            staticClass:
+                              "list-group-item list-group-item-action"
+                          },
+                          [
+                            _c(
+                              "a",
+                              {
+                                staticClass: "card-link",
+                                attrs: { href: "/worker/" + worker.id }
+                              },
+                              [
+                                _c("img", {
+                                  staticClass:
+                                    "d-inline-flex pl-2 align-self-center",
+                                  staticStyle: { width: "10%" },
+                                  attrs: { src: worker.avatar }
+                                }),
+                                _vm._v(" "),
+                                _c(
+                                  "div",
+                                  {
+                                    staticClass:
+                                      "d-inline-flex pl-2 align-self-center flex-column"
+                                  },
+                                  [
+                                    _c("h4", [_vm._v(_vm._s(worker.name))]),
+                                    _vm._v(" "),
+                                    _c("h6", [_vm._v(_vm._s(worker.salary))]),
+                                    _vm._v(" "),
+                                    _c("h6", [
+                                      _vm._v(_vm._s(worker.position.title))
+                                    ])
+                                  ]
+                                )
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "a",
+                              {
+                                staticClass:
+                                  "d-inline-flex p-2 align-self-center float-right card-link text-danger",
+                                attrs: {
+                                  href: "/delete",
+                                  onclick:
+                                    "event.preventDefault();document.getElementById('delete-form-" +
+                                    worker.id +
+                                    "').submit();"
+                                }
+                              },
+                              [_vm._v("Delete")]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "form",
+                              {
+                                staticStyle: { display: "none" },
+                                attrs: {
+                                  id: "delete-form-" + worker.id,
+                                  action: "/delete",
+                                  method: "POST"
+                                }
+                              },
+                              [
+                                _c("input", {
+                                  attrs: { type: "hidden", name: "_token" },
+                                  domProps: { value: _vm.csrf_token }
+                                }),
+                                _vm._v(" "),
+                                _c("input", {
+                                  attrs: { type: "hidden", name: "worker_id" },
+                                  domProps: { value: worker.id }
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "a",
+                              {
+                                staticClass:
+                                  "d-inline-flex p-2 align-self-center float-right card-link",
+                                attrs: { href: "edit" + worker.id }
+                              },
+                              [_vm._v("Edit")]
+                            )
+                          ]
+                        )
+                      : _c(
+                          "div",
+                          {
+                            staticClass:
+                              "list-group-item list-group-item-action"
+                          },
+                          [
+                            _c("h4", { staticClass: "text-center" }, [
+                              _vm._v("No results")
+                            ])
+                          ]
+                        )
+                  })
+                )
               ])
             ])
           ])
         ])
       ])
     ])
-  }
-]
+  ])
+}
+var staticRenderFns = []
 render._withStripped = true
 module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {

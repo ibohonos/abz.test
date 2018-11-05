@@ -130,9 +130,7 @@ class WorkersController extends Controller
 
 	public function listWorkers()
 	{
-		$this->data['workers'] = Worker::all();
-
-		return view('list', $this->data);
+		return view('list');
 	}
 
 }
