@@ -128,4 +128,11 @@ class WorkersController extends Controller
 		return view('show', $this->data);
 	}
 
+	public function listWorkers()
+	{
+		$this->data['workers'] = Worker::all();
+
+		return view('list', $this->data);
+	}
+
 }

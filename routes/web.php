@@ -20,3 +20,4 @@ Route::post('/delete', 'WorkersController@deleteWorker')->name('delete.worker');
 Route::get('/edit/{id}', 'WorkersController@editWorker')->name('edit.worker');
 Route::post('/update', 'WorkersController@updateWorker')->name('update.worker');
 Route::get('/worker/{id}', 'WorkersController@showWorker')->name('show.worker');
+Route::get('/workers', 'WorkersController@listWorkers')->name('list.worker');

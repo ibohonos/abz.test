@@ -35,6 +35,9 @@
 							<li class="nav-item">
 								<a class="nav-link" href="{{ route('create.worker') }}">{{ __('Create worker') }}</a>
 							</li>
+							<li class="nav-item">
+								<a class="nav-link" href="{{ route('list.worker') }}">{{ __('List workers') }}</a>
+							</li>
 						@endauth
 					</ul>
 
